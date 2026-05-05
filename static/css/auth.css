@@ -1,0 +1,102 @@
+.auth-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+
+.auth-visual {
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.auth-visual svg {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+}
+
+.auth-panel {
+    background: var(--bg-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 32px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.auth-logo span {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--text-primary);
+}
+
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field .toggle-pw {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-weight: 700;
+}
+
+.password-field .input {
+    padding-left: 72px;
+}
+
+.auth-error {
+    display: none;
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--danger-bg);
+    background: var(--danger-bg);
+    color: var(--danger);
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.auth-error.show {
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-visual {
+        min-height: 160px;
+        padding: 24px;
+    }
+}

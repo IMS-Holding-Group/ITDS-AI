@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block content %}
+<div id="admin-stats-root">
+    <div class="page-head">
+        <h1>لوحة التحكم</h1>
+    </div>
+    <div class="stats-grid">
+        <div class="card stat-card fade-in">
+            <div class="stat-value" id="stat-total">—</div>
+            <div class="stat-label">إجمالي المهام</div>
+        </div>
+        <div class="card stat-card fade-in">
+            <div class="stat-value" id="stat-active">—</div>
+            <div class="stat-label">المهام النشطة</div>
+        </div>
+        <div class="card stat-card fade-in">
+            <div class="stat-value" id="stat-available">—</div>
+            <div class="stat-label">الموظفون المتاحون</div>
+        </div>
+        <div class="card stat-card fade-in">
+            <div class="stat-value" id="stat-week">—</div>
+            <div class="stat-label">نسبة الإنجاز هذا الأسبوع</div>
+        </div>
+    </div>
+
+    <div class="card fade-in">
+        <h2 class="section-title">المهام الحديثة</h2>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>المهمة</th><th>الحالة</th><th>الأولوية</th><th>المعين</th></tr></thead>
+                <tbody id="recent-tasks-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <h2 class="section-title">تنبيهات الإرهاق الوظيفي</h2>
+    <div id="burnout-cards" class="burnout-cards"></div>
+
+    <div class="card fade-in">
+        <h2 class="section-title">أداء الفريق</h2>
+        <canvas id="team-bar-chart" class="canvas-chart" width="600" height="240"></canvas>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/charts.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/employee.css') }}">{% endblock %}
+{% block content %}
+<div id="employee-summary-root">
+    <div class="page-head">
+        <h1 id="emp-greet">مرحباً</h1>
+    </div>
+    <div class="stats-grid">
+        <div class="card stat-card"><div class="stat-value" id="emp-stat-active">—</div><div class="stat-label">مهامي النشطة</div></div>
+        <div class="card stat-card"><div class="stat-value" id="emp-stat-week">—</div><div class="stat-label">المكتملة هذا الأسبوع</div></div>
+        <div class="card stat-card"><div class="stat-value" id="emp-stat-perf">—</div><div class="stat-label">نتيجة أدائي</div></div>
+        <div class="card stat-card"><div class="stat-value" id="emp-stat-burn">—</div><div class="stat-label">خطر الإرهاق</div></div>
+    </div>
+
+    <h2 class="section-title">مهامي العاجلة</h2>
+    <div id="emp-urgent" class="task-grid"></div>
+
+    <div class="card fade-in">
+        <h2 class="section-title">آخر نشاط</h2>
+        <ul id="emp-activity" class="activity-list"></ul>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/employee_dashboard.js') }}" defer></script>
+{% endblock %}

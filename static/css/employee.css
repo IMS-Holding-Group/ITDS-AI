@@ -1,0 +1,62 @@
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.task-card .task-meta {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.perf-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.perf-score-big {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.activity-list {
+    padding-right: 20px;
+    margin: 0;
+}
+
+.section-title {
+    margin-bottom: 16px;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.task-card-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.task-card-item .progress-bar {
+    width: 15%;
+}
+
+.task-card-item[data-status="completed"] .progress-bar {
+    width: 100%;
+}
+
+.task-card-item[data-status="in_review"] .progress-bar {
+    width: 85%;
+}
+
+.task-card-item[data-status="in_progress"] .progress-bar {
+    width: 55%;
+}
+
+.task-card-item[data-status="assigned"] .progress-bar {
+    width: 25%;
+}

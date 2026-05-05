@@ -1,0 +1,17 @@
+# تعريف خدمة ويب على Render لـ ITDS-AI
+# بعد ربط المستودع: New → Blueprint → اربط الفرع وطبّق هذا الملف، أو أنشئ Web Service يدوياً بنفس الأوامر.
+
+services:
+  - type: web
+    name: itds-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.8"
+      - key: ITDS_SECRET_KEY
+        generateValue: true
+      - key: FLASK_DEBUG
+        value: "false"

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/employee.css') }}">{% endblock %}
+{% set sc = (emp.performance_score if emp else 0)|float %}
+{% set ring_c = 326.73 %}
+{% set ring_off = (ring_c * (1 - sc / 100.0))|round(2) %}
+{% block content %}
+<div class="page-head">
+    <h1>أدائي</h1>
+</div>
+
+{% if emp %}
+<div class="card perf-ring-wrap fade-in">
+    <div>
+        <svg width="140" height="140" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#EEF1F7" stroke-width="10"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#1B3F7E" stroke-width="10"
+                stroke-dasharray="{{ ring_c }}"
+                stroke-dashoffset="{{ ring_off }}"
+                transform="rotate(-90 60 60)"
+                stroke-linecap="round"/>
+        </svg>
+    </div>
+    <div>
+        <p class="text-muted">نتيجة الأداء الكلية</p>
+        <div class="perf-score-big">{{ '%.1f'|format(sc) }}</div>
+    </div>
+</div>
+
+<script id="perf-data-json" type="application/json">{{ perf_chart | tojson }}</script>
+
+<div class="card fade-in">
+    <h2 class="section-title">تطور الأداء (آخر المهام المسجلة)</h2>
+    <canvas id="perf-line-chart" class="canvas-chart" width="600" height="240"></canvas>
+</div>
+
+<div class="card fade-in">
+    <h2 class="section-title">سجل المهام المكتملة</h2>
+    <div class="table-wrap">
+        <table class="responsive-stack">
+            <thead><tr><th>المهمة</th><th>التقييم</th><th>وقت الإنجاز</th><th>في الموعد</th></tr></thead>
+            <tbody>
+            {% for row in logs %}
+            <tr>
+                <td data-label="المهمة">{{ row.title }}</td>
+                <td data-label="التقييم">{{ '%.1f'|format(row.score) }}</td>
+                <td data-label="وقت الإنجاز">{{ row.completion_time }}</td>
+                <td data-label="في الموعد">{{ 'نعم' if row.on_time else 'لا' }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card fade-in {% if emp.burnout_risk > 0.6 %}alert-danger{% elif emp.burnout_risk > 0.3 %}alert-warn{% endif %}">
+    <h2 class="section-title">خطر الإرهاق الوظيفي</h2>
+    <p>المؤشر الحالي: {{ '%.2f'|format(emp.burnout_risk) }}</p>
+    {% if emp.burnout_risk > 0.6 %}
+    <p><strong>يُنصح بأخذ استراحة وتقليل الحمل عند الإمكان.</strong></p>
+    {% else %}
+    <p class="text-muted">حافظ على توازنك بين المهام والراحة.</p>
+    {% endif %}
+</div>
+{% else %}
+<p class="text-muted">تعذر تحميل بيانات الموظف.</p>
+{% endif %}
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/charts.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/employee_dashboard.js') }}" defer></script>
+{% endblock %}

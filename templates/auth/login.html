@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>تسجيل الدخول — ITDS-AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body>
+<div class="auth-layout">
+    <div class="auth-visual">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+            <rect width="400" height="400" fill="#1B3F7E"/>
+            <circle cx="80" cy="100" r="40" fill="#15336B"/>
+            <circle cx="320" cy="120" r="60" fill="#E8A020" opacity="0.35"/>
+            <rect x="120" y="200" width="160" height="24" rx="12" fill="#EBF0FB" opacity="0.9"/>
+            <rect x="90" y="260" width="220" height="24" rx="12" fill="#EBF0FB" opacity="0.65"/>
+            <rect x="140" y="320" width="120" height="24" rx="12" fill="#E8A020" opacity="0.9"/>
+        </svg>
+    </div>
+    <div class="auth-panel">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <svg width="44" height="44" viewBox="0 0 48 48" aria-hidden="true">
+                    <rect x="6" y="8" width="36" height="32" rx="6" fill="#1B3F7E"/>
+                    <path d="M14 22h20v4H14zm0-8h12v4H14zm8 16h12v4H22z" fill="#E8A020"/>
+                </svg>
+                <span>نظام توزيع المهام الذكي</span>
+            </div>
+            <div id="login-error" class="auth-error" role="alert"></div>
+            <form id="login-form">
+                <div class="field">
+                    <label for="email">البريد الإلكتروني</label>
+                    <input class="input" type="email" id="email" name="email" required autocomplete="username">
+                </div>
+                <div class="field">
+                    <label for="password">كلمة المرور</label>
+                    <div class="password-field">
+                        <input class="input" type="password" id="password" name="password" required autocomplete="current-password">
+                        <button type="button" class="toggle-pw" id="toggle-pw" aria-label="إظهار كلمة المرور">إظهار</button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="login-btn">
+                    <span class="spinner" aria-hidden="true"></span>
+                    تسجيل الدخول
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="login-post-url" value="{{ url_for('auth.login_post') }}">
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

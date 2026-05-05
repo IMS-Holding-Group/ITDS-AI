@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block content %}
+<div id="reports-root" class="fade-in">
+    <div class="page-head">
+        <h1>التقارير والتحليلات</h1>
+        <div class="reports-actions">
+            <select class="input" id="report-range">
+                <option value="week">أسبوع</option>
+                <option value="month" selected>شهر</option>
+                <option value="quarter">3 أشهر</option>
+            </select>
+            <button type="button" class="btn btn-ghost" id="report-print">طباعة / تصدير PDF</button>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="card">
+            <h2 class="section-title">المهام المكتملة حسب اليوم</h2>
+            <canvas id="report-line-chart" class="canvas-chart" width="600" height="240"></canvas>
+        </div>
+        <div class="card">
+            <h2 class="section-title">توزيع المهام حسب الأولوية</h2>
+            <div id="report-pie" class="pie-wrap"></div>
+        </div>
+        <div class="card">
+            <h2 class="section-title">متوسط أداء الموظفين</h2>
+            <canvas id="report-bar-employees" class="canvas-chart" width="600" height="240"></canvas>
+        </div>
+        <div class="card">
+            <h2 class="section-title">خطر الإرهاق للفريق</h2>
+            <div id="burnout-bars"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/charts.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}" defer></script>
+{% endblock %}

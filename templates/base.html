@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title or "ITDS-AI" }} — نظام توزيع المهام الذكي</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% block navbar %}
+    <header class="navbar">
+        <div class="navbar-inner">
+            <div class="nav-brand-group">
+                <button type="button" class="burger-btn" aria-label="القائمة">☰</button>
+                <a href="{{ url_for('auth.home') }}" class="brand">
+                    <svg width="36" height="36" viewBox="0 0 48 48" aria-hidden="true">
+                        <rect x="6" y="8" width="36" height="32" rx="6" fill="#1B3F7E"/>
+                        <path d="M14 22h20v4H14zm0-8h12v4H14zm8 16h12v4H22z" fill="#E8A020"/>
+                    </svg>
+                    <span>ITDS-AI</span>
+                </a>
+            </div>
+            <nav class="nav-links">
+                {% if session.user_role == 'admin' %}
+                <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.path.startswith('/admin/dashboard') else '' }}">الرئيسية</a>
+                <a href="{{ url_for('admin.tasks_page') }}" class="{{ 'active' if '/admin/tasks' in request.path else '' }}">المهام</a>
+                <a href="{{ url_for('admin.employees_page') }}" class="{{ 'active' if '/admin/employees' in request.path else '' }}">الموظفون</a>
+                <a href="{{ url_for('admin.reports_page') }}" class="{{ 'active' if '/admin/reports' in request.path else '' }}">التقارير</a>
+                {% elif session.user_role == 'employee' %}
+                <a href="{{ url_for('employee.dashboard') }}" class="{{ 'active' if '/employee/dashboard' in request.path else '' }}">الرئيسية</a>
+                <a href="{{ url_for('employee.my_tasks') }}" class="{{ 'active' if '/employee/my-tasks' in request.path else '' }}">مهامي</a>
+                <a href="{{ url_for('employee.performance_page') }}" class="{{ 'active' if '/employee/performance' in request.path else '' }}">أدائي</a>
+                {% endif %}
+            </nav>
+            <div class="nav-actions">
+                <div class="notif-wrap">
+                    <button type="button" class="icon-btn" id="notif-bell" aria-label="الإشعارات">🔔</button>
+                    <span class="badge-count is-empty" id="notif-badge">0</span>
+                    <div class="notif-panel" id="notif-panel"></div>
+                </div>
+                <span class="nav-user-label">{{ session.user_name }}</span>
+                <a class="btn btn-ghost" href="{{ url_for('auth.logout') }}">خروج</a>
+            </div>
+        </div>
+    </header>
+    {% endblock %}
+
+    <main class="container fade-in">
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}" defer></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

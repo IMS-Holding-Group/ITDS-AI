@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% block content %}
+<div class="page-head">
+    <h1>الموظفون</h1>
+    <button type="button" class="btn btn-primary" id="open-emp-modal">إضافة موظف</button>
+</div>
+
+<div class="table-wrap">
+    <table class="responsive-stack">
+        <thead><tr><th>الاسم</th><th>البريد</th><th>القسم</th><th>الأداء</th><th>الحمل</th><th>خطر الإرهاق</th><th>الحالة</th></tr></thead>
+        <tbody>
+        {% for e in employees %}
+        {% set w = (e.current_workload * 100.0 / e.max_workload) if e.max_workload else 0 %}
+        {% set wp = w if w <= 100 else 100 %}
+        <tr>
+            <td data-label="الاسم">{{ e.name }}{% if e.burnout_risk > 0.6 %} <span title="خطر عالٍ" aria-label="تحذير">⚠️</span>{% endif %}</td>
+            <td data-label="البريد">{{ e.email }}</td>
+            <td data-label="القسم">{{ e.department }}</td>
+            <td data-label="الأداء">{{ '%.1f'|format(e.performance_score) }}</td>
+            <td data-label="الحمل">
+                <div class="progress-track"><div class="progress-bar {% if wp >= 100 %}danger{% elif wp >= 70 %}warning{% endif %}" style="width: {{ '%.1f'|format(wp) }}%;"></div></div>
+                <span class="text-muted">{{ e.current_workload }}/{{ e.max_workload }}</span>
+            </td>
+            <td data-label="خطر الإرهاق">{{ '%.2f'|format(e.burnout_risk) }}</td>
+            <td data-label="الحالة">{{ 'متاح' if e.is_available else 'غير متاح' }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="modal-backdrop" id="emp-modal">
+    <div class="modal">
+        <div class="modal-head">
+            <h2>موظف جديد</h2>
+            <button type="button" class="icon-btn" data-close-emp>✕</button>
+        </div>
+        <form id="emp-form">
+            <input type="hidden" id="emp-create-url" value="{{ url_for('admin.employees_create') }}">
+            <div class="field"><label for="emp-name">الاسم</label><input class="input" id="emp-name" required></div>
+            <div class="field"><label for="emp-email">البريد</label><input class="input" type="email" id="emp-email" required></div>
+            <div class="field"><label for="emp-dept">القسم</label><input class="input" id="emp-dept" required></div>
+            <div class="field"><label for="emp-skills">المهارات (مفصولة بفاصلة)</label><textarea class="input" id="emp-skills"></textarea></div>
+            <div class="field"><label for="emp-perf">درجة الأداء الافتراضية</label><input class="input" type="number" step="0.1" id="emp-perf" value="80"></div>
+            <div class="field"><label for="emp-spd">درجة السرعة الافتراضية</label><input class="input" type="number" step="0.1" id="emp-spd" value="75"></div>
+            <button type="submit" class="btn btn-primary btn-block" id="emp-submit"><span class="spinner"></span> حفظ</button>
+            <p class="text-muted">كلمة المرور الافتراضية للموظف الجديد: Emp@123</p>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}" defer></script>
+{% endblock %}

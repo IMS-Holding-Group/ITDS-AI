@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">{% endblock %}
+{% set status_ar = {
+  'new':'جديدة','analyzing':'قيد التحليل','assigned':'مخصصة','in_progress':'قيد التنفيذ',
+  'in_review':'قيد المراجعة','completed':'مكتملة','on_hold':'معلقة'
+} %}
+{% block content %}
+<div id="tasks-admin-root">
+    <div class="page-head">
+        <h1>إدارة المهام</h1>
+        <button type="button" class="btn btn-primary" id="open-task-modal">إضافة مهمة</button>
+    </div>
+
+    <div class="filters-bar">
+        <select class="input" id="filter-status">
+            <option value="">كل الحالات</option>
+            {% for k,v in status_ar.items() %}
+            <option value="{{ k }}">{{ v }}</option>
+            {% endfor %}
+        </select>
+        <select class="input" id="filter-priority">
+            <option value="">كل الأولويات</option>
+            <option value="low">low</option>
+            <option value="medium">medium</option>
+            <option value="high">high</option>
+            <option value="critical">critical</option>
+        </select>
+        <select class="input" id="filter-employee">
+            <option value="">كل الموظفين</option>
+            {% for e in employees %}
+            <option value="{{ e.id }}">{{ e.name }}</option>
+            {% endfor %}
+        </select>
+        <select class="input" id="filter-date">
+            <option value="">كل التواريخ</option>
+            <option value="7">آخر 7 أيام</option>
+            <option value="30">آخر 30 يوماً</option>
+        </select>
+    </div>
+
+    <div class="table-wrap">
+        <table class="responsive-stack" id="tasks-table">
+            <thead>
+            <tr>
+                <th>المهمة</th><th>الأولوية</th><th>الحالة</th><th>المهارات</th><th>المعيّن</th><th>تغيير التعيين</th><th>تحديث الحالة</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for t in tasks %}
+            <tr data-status="{{ t.status }}" data-priority="{{ t.priority }}" data-employee="{{ t.assigned_to or '' }}" data-created="{{ t.created_at }}">
+                <td data-label="المهمة">{{ t.title }}</td>
+                <td data-label="الأولوية" class="priority-{{ t.priority }}">{{ t.priority }}</td>
+                <td data-label="الحالة"><span class="badge status-{{ t.status }}">{{ status_ar.get(t.status, t.status) }}</span></td>
+                <td data-label="المهارات">{{ t.required_skills }}</td>
+                <td data-label="المعيّن">{{ t.assignee_name or '—' }}</td>
+                <td data-label="تغيير التعيين">
+                    <select class="input task-assign-select" data-id="{{ t.id }}">
+                        <option value="">— اختر موظفاً —</option>
+                        {% for e in employees %}
+                        <option value="{{ e.id }}" {% if t.assigned_to == e.id %}selected{% endif %}>{{ e.name }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+                <td data-label="تحديث الحالة">
+                    <select class="input task-status-select" data-id="{{ t.id }}">
+                        {% for k,v in status_ar.items() %}
+                        <option value="{{ k }}" {% if t.status == k %}selected{% endif %}>{{ v }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="task-modal" role="dialog" aria-modal="true">
+    <div class="modal">
+        <div class="modal-head">
+            <h2>مهمة جديدة</h2>
+            <button type="button" class="icon-btn" data-close-modal aria-label="إغلاق">✕</button>
+        </div>
+        <form id="task-form">
+            <div class="field"><label for="fld-title">العنوان</label><input class="input" id="fld-title" required></div>
+            <div class="field"><label for="fld-desc">الوصف</label><textarea class="input" id="fld-desc"></textarea></div>
+            <div class="field"><label for="fld-priority">الأولوية</label>
+                <select class="input" id="fld-priority">
+                    <option value="low">منخفضة</option>
+                    <option value="medium" selected>متوسطة</option>
+                    <option value="high">عالية</option>
+                    <option value="critical">حرجة</option>
+                </select>
+            </div>
+            <div class="field"><label>المهارات المطلوبة</label>
+                <div class="tag-input-wrap" id="skills-tags">
+                    <input type="text" id="skills-input" placeholder="اكتب مهارة ثم Enter"></div>
+            </div>
+            <div class="field"><label for="fld-deadline">الموعد النهائي</label><input class="input" type="date" id="fld-deadline"></div>
+            <div class="field"><label for="fld-hours">الساعات التقديرية</label><input class="input" type="number" step="0.5" id="fld-hours" value="4"></div>
+            <button type="submit" class="btn btn-primary" id="task-submit-btn"><span class="spinner"></span> حفظ وتشغيل المحرك</button>
+        </form>
+        <div id="ai-match-results"></div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/charts.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}" defer></script>
+{% endblock %}

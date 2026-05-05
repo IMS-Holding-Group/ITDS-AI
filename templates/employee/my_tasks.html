@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block extra_css %}<link rel="stylesheet" href="{{ url_for('static', filename='css/employee.css') }}">{% endblock %}
+{% set status_ar = {
+  'new':'جديدة','analyzing':'قيد التحليل','assigned':'مخصصة','in_progress':'قيد التنفيذ',
+  'in_review':'قيد المراجعة','completed':'مكتملة','on_hold':'معلقة'
+} %}
+{% block content %}
+<div class="page-head">
+    <h1>مهامي</h1>
+</div>
+
+<div class="tabs" id="my-tasks-tabs">
+    <button type="button" class="tab-btn active" data-filter="all">الكل</button>
+    <button type="button" class="tab-btn" data-filter="active">نشطة</button>
+    <button type="button" class="tab-btn" data-filter="review">قيد المراجعة</button>
+    <button type="button" class="tab-btn" data-filter="done">مكتملة</button>
+</div>
+
+<div class="task-grid">
+    {% for t in tasks %}
+    <div class="card task-card-item fade-in" data-status="{{ t.status }}">
+        <h3>{{ t.title }}</h3>
+        <p class="task-meta"><span class="priority-{{ t.priority }}">{{ t.priority }}</span> · {{ status_ar.get(t.status, t.status) }}</p>
+        {% if t.description %}<p>{{ t.description }}</p>{% endif %}
+        <p class="text-muted">الموعد النهائي: {{ t.deadline or '—' }}</p>
+        <div class="progress-track" aria-hidden="true"><div class="progress-bar"></div></div>
+        <div class="task-card-actions">
+            {% if t.status == 'assigned' %}
+            <button type="button" class="btn btn-primary" data-action-start data-task-id="{{ t.id }}">ابدأ العمل</button>
+            {% endif %}
+            {% if t.status == 'in_progress' %}
+            <button type="button" class="btn btn-accent" data-action-finish data-task-id="{{ t.id }}">أرسل للمراجعة</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/employee_dashboard.js') }}" defer></script>
+{% endblock %}
