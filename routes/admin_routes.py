@@ -258,7 +258,7 @@ def employees_create():
 
         conn.execute(
             "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'employee')",
-            (name, email, hash_password("Emp@123")),
+            (name, email, hash_password("")),
         )
         uid = conn.execute("SELECT last_insert_rowid() AS id").fetchone()["id"]
         skills_json = json.dumps(skills, ensure_ascii=False)

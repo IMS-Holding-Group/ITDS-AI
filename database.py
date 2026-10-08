@@ -103,9 +103,9 @@ def seed_if_empty(conn: sqlite3.Connection) -> None:
         return
 
     admins = [
-        {"name": "أحمد العمري", "email": "ahmed@itds.com", "password": "Admin@123"},
-        {"name": "سارة الزهراني", "email": "sara@itds.com", "password": "Admin@123"},
-        {"name": "خالد المالكي", "email": "khaled@itds.com", "password": "Admin@123"},
+        {"name": "أحمد العمري", "email": "ahmed@itds.com", "password": ""},
+        {"name": "سارة الزهراني", "email": "sara@itds.com", "password": ""},
+        {"name": "خالد المالكي", "email": "khaled@itds.com", "password": ""},
     ]
 
     employees_seed = [
@@ -161,7 +161,7 @@ def seed_if_empty(conn: sqlite3.Connection) -> None:
         skills_json = json.dumps(row["skills"], ensure_ascii=False)
         conn.execute(
             "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
-            (row["name"], row["email"], hash_password("Emp@123"), "employee"),
+            (row["name"], row["email"], hash_password(""), "employee"),
         )
         uid = conn.execute("SELECT last_insert_rowid() AS id").fetchone()["id"]
         burnout = row.get("burnout_risk", 0.0)
